@@ -18,8 +18,8 @@ def api_home(request, *args, **kwargs):
     body = request.body
     api_response = {}
     try:
-        api_response = json.loads(request.body)
+        api_response = json.loads(body)
     except:
         pass
-    #print(api_response)
+    print(body)
     return JsonResponse(api_response)
