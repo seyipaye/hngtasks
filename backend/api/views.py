@@ -1,5 +1,6 @@
 from enum import Enum
 from django.http import JsonResponse
+from django.http import HttpResponseBadRequest
 from django.shortcuts import render
 import json
 from django.views.decorators.csrf import csrf_exempt
@@ -32,8 +33,10 @@ def api_home(request, *args, **kwargs):
         pass
     print(body)
 
-    #if operation_type == None:
-    return JsonResponse({'slackUsername' : 'seyipaye', 'operation_type': operation_type.name, 'result': get_result(operation_type, x, y)})
+    if operation_type != None:
+        return JsonResponse({'slackUsername' : 'seyipaye', 'operation_type': operation_type.name, 'result': get_result(operation_type, x, y)})
+    else: return HttpResponseBadRequest("Coldn't parse operation type, try the following keywords, addition: ['add', 'sum', 'plus', 'addition', 'summation'], subtraction: ['subtract', 'difference', 'minus', 'subtraction'], multiplication: ['multiply', 'product', 'times', 'multiplication']")
+
 
 def get_result(operation, x, y):
     match operation:
@@ -43,8 +46,8 @@ def get_result(operation, x, y):
             return x - y
         case Enum.multiplication:
             return x * y
-    
-
+        case other:
+            return 0
 
 def my_function(data):
     addition = ['add', 'sum', 'plus', 'addition', 'summation']
