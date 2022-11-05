@@ -1,1 +1,1 @@
-web: gunicorn backend/cfehome.wsgi
+web: gunicorn --pythonpath backend cfehome.wsgi
