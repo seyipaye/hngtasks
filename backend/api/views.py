@@ -33,7 +33,7 @@ def api_home(request, *args, **kwargs):
     print(body)
 
     #if operation_type == None:
-    return JsonResponse({'slackUsername' : 'seyipaye', 'operation_type': operation_type.value, 'result': get_result(operation_type, x, y)})
+    return JsonResponse({'slackUsername' : 'seyipaye', 'operation_type': operation_type.name, 'result': get_result(operation_type, x, y)})
 
 def get_result(operation, x, y):
     match operation:
