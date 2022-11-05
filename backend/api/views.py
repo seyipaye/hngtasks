@@ -6,20 +6,62 @@ from django.views.decorators.csrf import csrf_exempt
 
 
 # Create your views here.
-class Season(Enum):
-    SPRING = 1
-    SUMMER = 2
-    AUTUMN = 3
-    WINTER = 4
 
+#{"operation_type":"What is the difference of","x":5,"y":20}
+#b'{"operation_type":"subtraction","x":10,"y":2}'
+
+#{ “slackUsername”: String, “result”: Integer, “operation_type”: Enum.value }
+
+# Recieve request
+# Tell if it is multipliction or Addition or subtraction
+# Return a response with the value
 
 @csrf_exempt
 def api_home(request, *args, **kwargs):
+    x = 0
+    y = 0
+    operation_type = None
+
     body = request.body
     api_response = {}
     try:
-        api_response = json.loads(body)
+        x = json.loads(body)['x']
+        y = json.loads(body)['y']
+        operation_type = my_function(json.loads(body)['operation_type'])
     except:
         pass
     print(body)
-    return JsonResponse(api_response)
+
+    #if operation_type == None:
+    return JsonResponse({'slackUsername' : 'seyipaye', 'operation_type': operation_type.value, 'result': get_result(operation_type, x, y)})
+
+def get_result(operation, x, y):
+    match operation:
+        case Enum.addition:
+            return x + y
+        case Enum.subtraction:
+            return x - y
+        case Enum.multiplication:
+            return x * y
+    
+
+
+def my_function(data):
+    addition = ['add', 'sum', 'plus', 'addition', 'summation']
+    subtraction = ['subtract', 'difference', 'minus', 'subtraction']
+    multiplication = ['multiply', 'product', 'times', 'multiplication']
+
+    if any(value in data for value in addition):
+        return Enum.addition
+    elif any(value in data for value in subtraction):
+        return Enum.subtraction
+    elif any(value in data for value in multiplication):
+        return Enum.multiplication
+    else: 
+        return None
+
+class Enum(Enum):
+    addition = 'Enum.addition'
+    subtraction = 'Enum.subtraction'
+    multiplication = 'Enum.multiplication'
+ 
